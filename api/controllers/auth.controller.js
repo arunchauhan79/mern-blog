@@ -60,7 +60,6 @@ export const google = async (req, res, next) => {
     const { name, email, googlePhotoUrl } = req.body;
     try {
         const user = await User.findOne({ email: email });
-        console.log('user', user)
         if (user) {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             const { password, ...rest } = await user._doc;
@@ -68,8 +67,6 @@ export const google = async (req, res, next) => {
                 httpOnly: true
             }).json(rest);
         } else {
-            console.log("SignUp")
-
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
 
