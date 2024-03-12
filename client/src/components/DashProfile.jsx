@@ -2,16 +2,17 @@ import { Alert, Button, Modal, TextInput } from 'flowbite-react';
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { app } from './../firebase';
+import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFailure, signoutSuccess } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { Link } from 'react-router-dom';
 
 
 const DashProfile = () => {
     const dispatch = useDispatch()
-    const { currentUser, error } = useSelector(state => state.user)
+    const { currentUser, error, loading } = useSelector(state => state.user)
     const [imgFile, setImgFile] = useState(null)
     const [imgFileUrl, setImgFileUrl] = useState(null);
     const filePickerRef = useRef(null)
@@ -176,7 +177,13 @@ const DashProfile = () => {
                     defaultValue={currentUser.email} onChange={handleChange} />
                 <TextInput type='text' id='password' placeholder='password' onChange={handleChange}
                 />
-                <Button type='submit' gradientDuoTone={'purpleToPink'} outline>Update</Button>
+                <Button type='submit' gradientDuoTone={'purpleToPink'} outline disabled={loading || imageFileUploading}>
+                    {loading ? 'loading...' : 'Update'}
+                </Button>
+                {currentUser.isAdmin &&
+                    <Link to='/create-post'>
+                        <Button gradientDuoTone={'purpleToPink'} className='w-full'>Create a post</Button> </Link>}
+
             </form>
             <div className="text-red-500 flex justify-between mt-5">
                 <span className='cursor-pointer' onClick={() => setShowConfirmations(true)}>Delete Account</span>
