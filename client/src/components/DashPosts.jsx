@@ -1,4 +1,4 @@
-import { Table } from 'flowbite-react';
+import { Button, Table } from 'flowbite-react';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 const DashPosts = () => {
     const { currentUser } = useSelector(state => state.user);
     const [userPosts, getUserPosts] = useState([]);
+    const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
 
@@ -15,6 +16,9 @@ const DashPosts = () => {
                 const data = await res.json();
                 if (res.ok) {
                     getUserPosts(data.posts)
+                    if (data.posts.length < 9) {
+                        setShowMore(false)
+                    }
                 }
             }
             catch (error) {
@@ -27,7 +31,23 @@ const DashPosts = () => {
         }
 
     }, [currentUser._id]);
-    console.log(userPosts)
+
+    const handleShowMore = async () => {
+        const startIndex = userPosts.length;
+        try {
+            const res = await fetch(`/api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`);
+            const data = await res.json();
+            if (res.ok) {
+                getUserPosts((prev) => [...prev, ...data.posts]);
+                if (data.posts.length < 9) {
+                    setShowMore(false)
+                }
+            }
+        } catch (error) {
+
+        }
+    }
+    console.log(showMore)
     return (
         <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
             {currentUser.isAdmin && userPosts.length > 0 ? (<>
@@ -79,6 +99,12 @@ const DashPosts = () => {
                         ))
                     }
                 </Table>
+                {
+                    showMore &&
+                    <button onClick={handleShowMore} className="w-full text-teal-500 self-center text-sm py-7">
+                        Show more
+                    </button>
+                }
             </>) : (<div>
                 <p>There is no post</p>
             </div>)}
