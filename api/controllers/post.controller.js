@@ -6,7 +6,6 @@ export const create = async (req, res, next) => {
         return next(errorHandler(403, 'You are not allowed to create this user'));
     }
 
-    console.log(req.body)
     if (!req.body.title || !req.body.content) {
         return next(errorHandler(400, 'Please provide all required fields'));
     }
