@@ -22,7 +22,6 @@ const PostPage = () => {
                     setError(res.message)
                 }
                 else {
-                    console.log(data.posts[0])
                     setLoading(false);
                     setPost(data.posts[0])
                 }

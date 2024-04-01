@@ -18,7 +18,6 @@ const Users = () => {
                 const data = await res.json();
                 if (res.ok) {
                     setUsers(data.users)
-                    console.log(data.users)
                     if (data.users.length < 9) {
                         setShowMore(false)
                     }

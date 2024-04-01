@@ -1,12 +1,14 @@
 import { Alert, Button, Textarea } from 'flowbite-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Comment from './Comment';
 
 const CommentSection = ({ postId }) => {
     const { currentUser } = useSelector(state => state.user);
     const [comment, setComment] = useState('')
-    const [commentError, setCommentError] = useState('')
+    const [commentError, setCommentError] = useState('');
+    const [comments, setComments] = useState([])
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (comment.length > 200) {
@@ -28,11 +30,28 @@ const CommentSection = ({ postId }) => {
             if (res.ok) {
                 setComment('')
                 setCommentError('')
+                setComments([data, ...comments])
             }
         } catch (error) {
             setCommentError(error.message);
         }
     }
+
+    useEffect(() => {
+
+        const fetchComments = async () => {
+            try {
+                const res = await fetch(`/api/comment/getPostComments/${postId}`)
+                if (res.ok) {
+                    const data = await res.json();
+                    setComments(data)
+                }
+            } catch (error) {
+                setCommentError(error.message);
+            }
+        }
+        fetchComments();
+    }, []);
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {currentUser ?
@@ -71,6 +90,20 @@ const CommentSection = ({ postId }) => {
                         {commentError}
                     </Alert>
                 )
+            }
+            {
+                comments.length === 0 ? (<p className='text-sm my-5'>
+                    No comments yet.
+                </p>) : (<div className='text-sm my-5 flex items-center gap-1'>
+                    <p>comments</p>
+                    <div className='border border-gray-400 py-1 px-2 rounder-sm'>
+                        <p>{comments.length}</p>
+                    </div>
+                </div>)
+
+            }
+            {
+                comments.map(comment => <Comment key={comment._id} comment={comment} />)
             }
         </div>
     )
