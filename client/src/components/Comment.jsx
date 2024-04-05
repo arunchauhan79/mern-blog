@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
-import { FaChessKing } from 'react-icons/fa'
+import { FaThumbsUp } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 
-const Comment = ({ comment }) => {
-    console.log('Comment', comment)
+const Comment = ({ comment, onLike }) => {
+    const { currentUser } = useSelector(state => state.user)
     const [user, setUser] = useState(null)
     useEffect(() => {
         const fetchUser = async () => {
@@ -20,6 +21,7 @@ const Comment = ({ comment }) => {
         fetchUser();
     }, [comment])
 
+
     return (
         <div className='flex p-3 border-b dark:border-gray-600 text-sm'>
             <div className='flex-shrink-0 mr-3 '>
@@ -31,6 +33,16 @@ const Comment = ({ comment }) => {
                     <span className='text-sm text-gray-400'>{moment(comment.createdAt).fromNow()}</span>
                 </div>
                 <p className='text-gray-500 pb-2'>{comment.content}</p>
+                <div className='flex gap-2 items-center pt-2 text-xs'>
+                    <button type='button' className={`text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id) && '!text-blue-500'}`} onClick={() => onLike(comment._id)}>
+                        <FaThumbsUp className='text-sm' />
+                    </button>
+                    <p className='text-gray-500'>
+                        {
+                            comment.numberOfLikes > 0 && comment.numberOfLikes + ' ' + (comment.numberOfLikes === 1 ? 'like' : 'likes')
+                        }
+                    </p>
+                </div>
             </div>
         </div>
     )
