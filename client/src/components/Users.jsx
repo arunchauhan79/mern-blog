@@ -60,13 +60,9 @@ const Users = () => {
 
             })
             const data = await res.json();
-            if (!res.ok) {
-                console.log(data.message)
-            } else {
-                setUsers((prev) =>
-                    prev.filter(user => user._id !== userId));
-            }
-
+            if (res.ok) {
+                setUsers(users.filter(user => user._id !== userId));
+            } 
         } catch (error) {
             console.log(error.message)
         }

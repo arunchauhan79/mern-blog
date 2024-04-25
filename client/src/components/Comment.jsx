@@ -4,11 +4,12 @@ import { FaThumbsUp } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
 import { Button, Textarea } from 'flowbite-react'
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const { currentUser } = useSelector(state => state.user)
     const [user, setUser] = useState(null);
     const [isCommentEdit, setIsCommentEdit] = useState(false);
-    const [editedComment, setEditedComment] = useState(comment.content)
+    const [editedComment, setEditedComment] = useState(comment.content);
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -25,6 +26,9 @@ const Comment = ({ comment, onLike, onEdit }) => {
     }, [comment])
     const handleEdit = () => {
         setIsCommentEdit(true)
+    }
+    const handleDelete = () => {
+        onDelete(comment._id)
     }
     const saveEditedComment = async () => {
         try {
@@ -76,9 +80,15 @@ const Comment = ({ comment, onLike, onEdit }) => {
                                     }
                                 </p>
                             {
-                                (currentUser.isAdmin || comment.userId === currentUser._id) && <button type='button' className='text-gray-500 text-xs' onClick={handleEdit}>
+                                    (currentUser.isAdmin || comment.userId === currentUser._id) &&
+                                    <div className='flex gap-2'>
+                                        <button type='button' className='text-gray-500 text-xs' onClick={handleEdit}>
                                     Edit
                                 </button>
+                                            <button type='button' className='text-gray-500 text-xs' onClick={handleDelete}>
+                                                Delete
+                                            </button>
+                                        </div>
                             }
                         </div></>)
                 }
