@@ -38,6 +38,7 @@ const DashSidebar = () => {
                 <Link to='/dashboard?tab=profile'>
                     <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={currentUser.isAdmin ? 'Admin' : 'User'} labelColor='dark' as='div'>Profile</Sidebar.Item>
                 </Link>
+
                 {
                     currentUser.isAdmin &&
                     <Link to='/dashboard?tab=posts'>
@@ -47,6 +48,12 @@ const DashSidebar = () => {
                     currentUser.isAdmin &&
                     <Link to='/dashboard?tab=users'>
                             <Sidebar.Item className='cursor-pointer' icon={HiUsers} as='div'>Users</Sidebar.Item>
+                    </Link>
+                }
+                {
+                    currentUser.isAdmin &&
+                    <Link to='/dashboard?tab=comments'>
+                        <Sidebar.Item active={tab === 'comments'} icon={HiDocumentText} labelColor='dark' as='div'>Comments</Sidebar.Item>
                     </Link>
                 }
                 <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer' onClick={handleSignout}>Sign Out</Sidebar.Item>

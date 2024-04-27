@@ -4,6 +4,7 @@ import DashProfile from '../components/DashProfile.jsx'
 import { useLocation } from 'react-router-dom'
 import DashPosts from '../components/DashPosts.jsx'
 import Users from '../components/Users.jsx'
+import DashComments from '../components/DashComments.jsx'
 
 const Dashboard = () => {
     const location = useLocation();
@@ -22,6 +23,7 @@ const Dashboard = () => {
             {tab === 'profile' && <DashProfile />}
             {tab === 'posts' && <DashPosts />}
             {tab === 'users' && <Users />}
+            {tab === 'comments' && <DashComments />}
         </div>
     )
 }
