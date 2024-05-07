@@ -41,8 +41,7 @@ const DashboardComp = () => {
                 const data = await res.json()
                 if (!res.ok) {
                     console.log(data.message)
-                } else {
-                    debugger
+                } else {                    
                     setPosts(data.posts)
                     setTotalPosts(data.totalPosts)
                     setLastMonthPosts(data.lastMonthPosts)
