@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser';
 import serviceRouter from './routes/index.js'
-import cors from 'cors';
+import path from 'path';
 
 dotenv.config()
 mongoose.connect(process.env.MONGO, {
@@ -19,7 +19,6 @@ const __dirname = path.resolve();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 //Routes
 app.use('/api', serviceRouter)
 
